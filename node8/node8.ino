@@ -4,9 +4,9 @@
 #include <ArduinoJson.h>
 #include <SoftwareSerial.h>
 
-const char* ssid = "realme3";               //Replace with your network SSID
-const char* password = "Password";  //Replace with your network password
-const char* host = "pblif12iot.000webhostapp.com";        //Replace with  your IP
+const char* ssid = "";               //Replace with your network SSID
+const char* password = "";  //Replace with your network password
+const char* host = "";        //Replace with  your IP
 
 SoftwareSerial water_sensor(14, 12);       // Rx Tx D5 D6
 float ph;
