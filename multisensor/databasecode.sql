@@ -1,4 +1,3 @@
-
 /*creating a table in the database*/
 CREATE TABLE tb_sensor (
   id int(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,

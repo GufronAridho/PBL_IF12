@@ -18,7 +18,7 @@
         $("#cekph").load("cekph.php")
         $("#cektds").load("cektds.php")
         $("#cektemp").load("cektemp.php")
-      }, 5000);
+      }, 5000); 
     });
   </script>
 </head>
