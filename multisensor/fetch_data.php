@@ -3,7 +3,7 @@
     $servername = "localhost";
     $username = "root";
     $password = "";
-    $dbname = "test2";
+    $dbname = "dbmultisensor";
 
     $conn = new mysqli($servername, $username, $password, $dbname);
 
