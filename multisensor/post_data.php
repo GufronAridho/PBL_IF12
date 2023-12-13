@@ -2,9 +2,9 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "test2";
+$dbname = "dbmultisensor";
 
-$api_key_value = "tPmAT5Ab3j7F9";
+$api_key_value = ""; 
 
 $api_key =  $ph = $tds = $temp = "";
 
@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             die("Connection failed: " . $conn->connect_error);
         } 
         
-        $sql = "INSERT INTO test (ph, tds, temp)
+        $sql = "INSERT INTO tb_sensor (ph, tds, temp)
         VALUES ( '" . $ph . "', '" . $tds . "', '" . $temp . "')";
         
         if ($conn->query($sql) === TRUE) {
