@@ -1,40 +1,44 @@
+#include <WiFiManager.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
 #include <ArduinoJson.h>
 #include <SoftwareSerial.h>
 
-const char* ssid = "";               //Replace with your network SSID
-const char* password = "";  //Replace with your network password
-const char* host = "";        //Replace with  your IP or Website hosting
+const char* host = "";  //Replace with your IP
+const char* serverName = ""; //Replace with http://your host/your folder/post_data.php 
 
-SoftwareSerial water_sensor(14, 12);       // Rx Tx D5 D6
+SoftwareSerial water_sensor(14, 12);  // Rx Tx D5 D6
+//Replace with your apiKeyValue
+//Make sure to change the apiKeyValue of the post_data.php
+String apiKeyValue = ""; 
 float ph;
 int tds;
 int temp;
 
 void setup() {
+  WiFi.mode(WIFI_STA);  // explicitly set mode, esp defaults to STA+AP
   Serial.begin(9600);
   water_sensor.begin(9600);
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-  // Attempt to connect to WiFi
-  int attempts = 0;
-  while (WiFi.status() != WL_CONNECTED && attempts < 20) {
-    Serial.print(".");
-    delay(1000);
-    attempts++;
-  }
-  if (attempts >= 20) {
-    Serial.println("Failed to connect to WiFi. Please check your credentials.");
-    // You may add additional handling here, such as restarting the device.
+  //WiFiManager, Local intialization. Once its business is done, there is no need to keep it around
+  WiFiManager wm;
+  // reset settings - wipe stored credentials for testing
+  // these are stored by the esp library
+  wm.resetSettings(); // you can delete this line if done with testing WiFi access point
+  // Automatically connect using saved credentials,
+  // if connection fails, it starts an access point with the specified name ( "AutoConnectAP"),
+  // if empty will auto generate SSID, if password is blank it will be anonymous AP (wm.autoConnect())
+  // then goes into a blocking loop awaiting configuration and will return success result
+  bool res;
+  // res = wm.autoConnect(); // auto generated AP name from chipid
+  // res = wm.autoConnect("AutoConnectAP"); // anonymous ap
+  res = wm.autoConnect("AutoConnectAP", "password");  // password protected ap
+  if (!res) {
+    Serial.println("Failed to connect");
+    // ESP.restart();
   } else {
-    Serial.println("");
-    Serial.println("WiFi connected");
-    Serial.println("IP address: ");
-    Serial.println(WiFi.localIP());
-    Serial.println();
-    delay(2000);
+    //if you get here you have connected to the WiFi
+    Serial.println("connected...yeey :)");
   }
 }
 
@@ -45,29 +49,38 @@ void loop() {
     const int httpPort = 80;
     if (!client.connect(host, httpPort)) {
       Serial.println("Connection to server failed");
-      // You may add additional handling here, such as restarting the device.
+      
       return;
     }
-
     //Check WiFi connection status
     if (WiFi.status() == WL_CONNECTED) {
-      String Link;
       HTTPClient http;
-      Link = "http://" + String(host) + "/send_data.php?ph=" + String(ph) + "&tds=" + String(tds) + "&temp=" + String(temp);
 
-      http.begin(client, Link);
-      http.GET();
+      http.begin(client, serverName);
 
-      String respon = http.getString();
-      Serial.println(respon);
+      http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      String httpRequestData = "api_key=" + apiKeyValue + "&ph=" + ph +"&tds=" + tds + "&temp=" + temp + "";
+      Serial.print("httpRequestData: ");
+      Serial.println(httpRequestData);
+
+      int httpResponseCode = http.POST(httpRequestData);
+      if (httpResponseCode > 0) {
+        Serial.print("HTTP Response code: ");
+        Serial.println(httpResponseCode);
+      } else {
+        Serial.print("Error code: ");
+        Serial.println(httpResponseCode);
+      }
+      // Free resources
       http.end();
-
+    } else {
+      Serial.println("WiFi Disconnected");
     }
   } else {
     Serial.println("Error in JSON data");
   }
-
-  delay(5000);  // kalo mau ganti ganti di arduino juga waktunya
+  delay(5000); 
 }
 
 bool get_sensor_data() {
@@ -90,7 +103,7 @@ bool get_sensor_data() {
   // Extract data from JSON
   ph = jsonDoc["a1"].as<float>();
   tds = jsonDoc["a2"].as<int>();
-  temp = jsonDoc["a3"].as<int>();  // Temp
+  temp = jsonDoc["a3"].as<int>(); 
 
   return true;
 }
