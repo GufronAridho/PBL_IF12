@@ -14,21 +14,21 @@
         $(document).ready(function () {
             setInterval(function () {
                 // Load pH data from the PHP file
-                $.get("cekph.php", function (data) {
+                $.get("php/cekph.php", function (data) {
                     $("#cekph").html(data);
                     var phValue = parseFloat(data);
                     updatePhClassification("phClassification", phValue, 3, 6, 7, 8, 11);
                 });
 
                 // Load TDS data from the PHP file
-                $.get("cektds.php", function (data) {
+                $.get("php/cektds.php", function (data) {
                     $("#cektds").html(data);
                     var tdsValue = parseFloat(data);
                     updateTDSClassification("tdsClassification", tdsValue, 50, 500);
                 });
 
                 // Load temperature data from the PHP file
-                $.get("cektemp.php", function (data) {
+                $.get("php/cektemp.php", function (data) {
                     $("#cektemp").html(data);
                     var tempValue = parseFloat(data);
                     updateClassification("tempClassification", tempValue, 10, 20 , 30 , 40);
