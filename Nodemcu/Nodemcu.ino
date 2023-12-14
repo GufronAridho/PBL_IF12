@@ -14,7 +14,7 @@ SoftwareSerial water_sensor(14, 12);  // Rx Tx D5 D6
 String apiKeyValue = ""; 
 float ph;
 int tds;
-int temp;
+float temp;
 
 void setup() {
   WiFi.mode(WIFI_STA);  // explicitly set mode, esp defaults to STA+AP
@@ -103,7 +103,7 @@ bool get_sensor_data() {
   // Extract data from JSON
   ph = jsonDoc["a1"].as<float>();
   tds = jsonDoc["a2"].as<int>();
-  temp = jsonDoc["a3"].as<int>(); 
+  temp = jsonDoc["a3"].as<float>(); 
 
   return true;
 }
