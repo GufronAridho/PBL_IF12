@@ -58,6 +58,10 @@
                         echo '<td class="bdr">' . $row["ph"] . '</td>';
                         echo '<td class="bdr">' . $row["tds"] . '</td>';
                         echo '<td class="bdr">' . $row["temp"] . '</td>';
+                        // Add 7 hours to the reading_time if you are using 000webhost 
+                        //$reading_time = date('Y-m-d H:i:s', strtotime($row["reading_time"] . '+7 hours'));
+
+                        //echo '<td class="bdr">' . $reading_time . '</td>';
                         echo '<td class="bdr">' . $row["reading_time"] . '</td>';
 
                         echo '</tr>';
