@@ -9,9 +9,8 @@ const char* host = "";  //Replace with your IP
 const char* serverName = ""; //Replace with http://your host/your folder/post_data.php 
 
 SoftwareSerial water_sensor(14, 12);  // Rx Tx D5 D6
-//Replace with your apiKeyValue
-//Make sure to change the apiKeyValue of the post_data.php
-String apiKeyValue = ""; 
+
+String apiKeyValue = "tPmAT5Ab3j7F9"; 
 float ph;
 int tds;
 float temp;
