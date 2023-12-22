@@ -15,7 +15,7 @@ DallasTemperature tempsensors(&oneWire);
 
 float tdsValue = 0;
 float tempValue = 0;
-float calibrationValue = 21.85;
+float calibrationValue = 21.94;
 int phVal = 0;
 unsigned long int avgVal;
 int bufferArr[10], temp;
